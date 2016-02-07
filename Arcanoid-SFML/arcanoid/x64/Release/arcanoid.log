@@ -1,0 +1,8 @@
+﻿Сборка начата 10.12.2015 9:18:35.
+     1>Проект "C:\Users\Valerion\documents\visual studio 2013\Projects\games\arcanoid\arcanoid.vcxproj" в узле 2 (целевые объекты Rebuild).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.Cpp.Platform.targets(64,5): error MSB8020: The build tools for v140 (Platform Toolset = 'v140') cannot be found. To build using the v140 build tools, please install v140 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Upgrade Solution...".
+     1>Сборка проекта "C:\Users\Valerion\documents\visual studio 2013\Projects\games\arcanoid\arcanoid.vcxproj" завершена (целевые объекты Rebuild) с ошибкой.
+
+Ошибка сборки.
+
+Затраченное время: 00:00:00.03
