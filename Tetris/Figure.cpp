@@ -1,20 +1,84 @@
 
 #include "Figure.h"
 
+Figure::Figure()
+{
+   getFigure = new bool*[4];
+    for (int i = 0; i < 4; i++)
+        getFigure[i] = new bool[4];
+    for(int i = 0; i < 4; i++)
+        for(int j = 0; j < 4; j++)
+            getFigure[i][j] = false;
+}
+
+Figure::~Figure()
+{
+    for (int i = 0; i < 4; i++)
+        delete[]getFigure[i];
+    delete[]getFigure;
+}
+
 void Figure::Clear()
 {
 	for (int i = 0; i < 4; i++)
 	for (int j = 0; j < 4; j++)
-		figureArray[i][j] = false;
+        figureArray[i][j] = false;
 }
 
-void Figure::Create()
+bool **Figure::GetFigure(int figure)
+{
+    for(int i = 0; i < 4; i++)
+        for(int j = 0; j < 4; j++)
+            getFigure[i][j] = false;
+
+    switch (figure)
+    {
+    case 0:
+        for (int i = 0; i < 4; i++)		//
+            getFigure[0][i] = true;	//
+        break;							//
+    case 1:
+        for (int i = 0; i < 2; i++)		// ||||
+        for (int j = 0; j < 2; j++)		//
+            getFigure[i][j] = true;	//
+        break;
+    case 2:
+        for (int i = 0; i < 3; i++)		//     ||
+            getFigure[0][i] = true;	//
+        getFigure[1][2] = true;		//
+        break;
+    case 3:
+        for (int i = 0; i < 3; i++)		// ||
+            getFigure[0][i] = true;	//
+        getFigure[1][0] = true;		//
+        break;
+    case 4:
+        for (int i = 0; i < 3; i++)		// ||||||
+            getFigure[1][i] = true;	//
+        getFigure[0][1] = true;		//
+        break;
+    case 5:
+        getFigure[0][0] = true;		// ||
+        getFigure[1][0] = true;		// ||||
+        getFigure[1][1] = true;		//   ||
+        getFigure[2][1] = true;		//
+        break;
+    case 6:
+        getFigure[1][0] = true;		//   ||
+        getFigure[0][1] = true;		// ||||
+        getFigure[1][1] = true;		// ||
+        getFigure[2][0] = true;		//
+        break;
+    }
+    return getFigure;
+}
+
+void Figure::Create(int figure)
 {
 	Clear();
 	rotate = 1;
-	srand(time(0));
-    int number_figure = rand() % 7;
-	switch (number_figure)
+
+    switch (figure)
 	{
 	case 0:
         type = line;					// ||||||||

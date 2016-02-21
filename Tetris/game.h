@@ -9,30 +9,35 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include "GameField.h"
+#include "menu.h"
 
-class Game : public QGraphicsView
+class Game : public QObject
 {
     Q_OBJECT
-
 private:
-    const int winH, winW;
-    int score;
-    QGraphicsScene *mainScene;
-    GameField *gameField;
-    QGraphicsRectItem **field, *fieldBoard;
-    QGraphicsPixmapItem *logo;
-    QGraphicsTextItem *scoreText;
 
-    void keyPressEvent(QKeyEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
+    GameField *gameField;
+    QGraphicsRectItem **field, **fieldNext;
+    QGraphicsPixmapItem *logo;
+    QGraphicsTextItem *score;
+
+    QGraphicsRectItem *fieldBoard, *nextFigureBoard;
+    QTimer *timer;
 
 public:
-    Game(int win_width, int win_height, QWidget *parent = 0);
+    Button *butClose;
+    QGraphicsScene *scene;
+    Game();
     ~Game();
+    bool eventFilter(QObject *, QEvent *);
+
+    void Restart();
 
 public slots:
     void Update();
+
+signals:
+    void EndGame(int);
 };
 
 #endif // GAME

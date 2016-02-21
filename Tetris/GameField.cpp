@@ -6,6 +6,10 @@
 GameField::GameField(int w, int h) : width(w), height(h)
 {
 	figure = new Figure();
+    srand(time(0));
+
+    score = 0;
+    next_figure = rand() % 7;
 
     gameFieldArray = new bool*[height];
     for (int i = 0; i < height; i++)
@@ -48,7 +52,8 @@ void GameField::CreateFigure()
     currentX = 1;
     currentY = 0;
 
-	figure->Create();
+    figure->Create(next_figure);
+    next_figure = rand() % 7;
 
 	AddFigure();
 }
@@ -586,8 +591,8 @@ bool GameField::CheckGameOver()
 
 void GameField::CheckLine()
 {
-	int count = 0,
-		line = 0;
+    int count = 0;
+
     for (int i = 0; i < height; i++)
 	{
 		count = 0;
@@ -596,7 +601,10 @@ void GameField::CheckLine()
             if (gameFieldArray[i][j])
 				count++;
             if (count == width)
+            {
                 DeleteHorizontalLine(i);
+                score++;
+            }
 		}
     }
 }
@@ -612,4 +620,14 @@ void GameField::DeleteHorizontalLine(int index_line)
 
     for (int j = 0; j < width; j++)
         gameFieldArray[0][j] = false;
+}
+
+int GameField::GetScore()
+{
+    return score;
+}
+
+bool **GameField::NextFigure()
+{
+    return figure->GetFigure(next_figure);
 }

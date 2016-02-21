@@ -6,9 +6,11 @@
 class GameField	// класс игрового поля
 {
 private:
-    Figure *figure;    // фигура
+        // фигура
     float currentX, currentY;	// настоящие координаты фигуры
     float speed;	// скорость падения фигуры
+    int score;
+    int next_figure;
 
     void AddFigure();	// добавление фигуры на игровое поле
 
@@ -21,12 +23,17 @@ private:
     void DeleteHorizontalLine(int index_line);
 
 public:
+    Figure *figure;
     bool **gameFieldArray;	// указатель на массив указателей / двойной массив - поле
     const int width, height; // размеры поля
 
     GameField(int, int);
 
     ~GameField();
+
+    int GetScore();
+
+    bool** NextFigure();
 
     void CreateFigure();	// создание фигуры
 
