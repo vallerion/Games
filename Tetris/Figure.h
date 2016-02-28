@@ -15,7 +15,7 @@ public:
     Figure();
     ~Figure();
 	bool figureArray[4][4]; // массив 4х4 фигуры
-	enum { line, square, Lleft, Lright, pyramid, Zleft, Zright }type;	// перечисление возможный фигур
+    enum { line, square, Lleft, Lright, pyramid, Zleft, Zright }type;	// перечисление возможный фигур
 	int rotate;	// счетчик положения фигуры
 
     bool** GetFigure(int figure);

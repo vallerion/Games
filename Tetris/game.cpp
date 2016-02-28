@@ -3,7 +3,9 @@
 Game::Game()
 {
     scene = new QGraphicsScene();
-    butClose = new Button(new QPixmap(":/images/images/but_back_1.png"),new QPixmap(":/images/images/but_back_2.png"));
+    scene->setSceneRect(0,0,400,600);
+
+    butClose = new Button(QPixmap(":/images/images/but_back_1.png"),QPixmap(":/images/images/but_back_2.png"));
     butClose->setPos(360,13);
     scene->addItem(butClose);
 
@@ -15,7 +17,7 @@ Game::Game()
 
     // create field
     gameField = new GameField(10, 20);
-
+    //gameField->CreateFigure();
 
     fieldBoard = new QGraphicsRectItem(14, 70, 260, 520);
     scene->addItem(fieldBoard);
@@ -24,7 +26,9 @@ Game::Game()
     scene->addItem(nextFigureBoard);
 
     score = new QGraphicsTextItem(QString("Score: " + QString::number(gameField->GetScore())));
-    score->setPos(280, 300);
+    score->setFont(QFont("Arial Black",14,-1,true));
+    score->setDefaultTextColor(QColor::fromRgb(180,0,0));
+    score->setPos(275, 200);
     scene->addItem(score);
 
     fieldNext = new QGraphicsRectItem*[4];
@@ -51,9 +55,15 @@ Game::Game()
             scene->addItem(&field[i][j]);
         }
 
+    bkgSound = new QMediaPlayer();
+    fallSound = new QMediaPlayer();
+    bkgSound->setMedia(QUrl("qrc:/sounds/sounds/pskov.mp3"));
+    fallSound->setMedia(QUrl("qrc:/sounds/sounds/fall.mp3"));
+    bkgSound->setVolume(50);
+    fallSound->setVolume(75);
+
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()),this,SLOT(Update()));
-    timer->start(50);
 }
 
 Game::~Game()
@@ -62,6 +72,8 @@ Game::~Game()
     delete fieldBoard;
     delete nextFigureBoard;
     delete score;
+    delete bkgSound;
+    delete fallSound;
 
     for(int i = 0; i < gameField->height; i++){
         delete[]field[i];
@@ -100,7 +112,26 @@ bool Game::eventFilter(QObject *obj, QEvent *event)
 
 void Game::Restart()
 {
-    gameField->CreateFigure();
+    bkgSound->play();
+
+    gameField->Restart();
+
+    for(int i = 0; i < 4; i++)
+        for(int j = 0; j < 4; j++)
+            fieldNext[i][j].setVisible(gameField->NextFigure()[i][j]);
+
+    timer->start(50);
+}
+
+void Game::Stop()
+{
+    bkgSound->stop();
+}
+
+void Game::SetMode(Game::Mode mode)
+{
+    this->mode = mode;
+    gameField->SetMode(mode);
 }
 
 void Game::Update()
@@ -109,7 +140,8 @@ void Game::Update()
         gameField->MoveDownFigure();
     else
     {
-        gameField->CheckLine();
+        if(gameField->CheckLine())
+            fallSound->play();
         if(gameField->CheckGameOver()){
             emit EndGame(gameField->GetScore());
             timer->stop();
@@ -119,7 +151,7 @@ void Game::Update()
         for(int i = 0; i < 4; i++)
             for(int j = 0; j < 4; j++)
                 fieldNext[i][j].setVisible(gameField->NextFigure()[i][j]);
-    }
+        }
 
     for(int i = 0; i < gameField->height; i++)
         for(int j = 0; j < gameField->width; j++)

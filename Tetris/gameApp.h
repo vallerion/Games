@@ -10,6 +10,7 @@
 #include <QKeyEvent>
 #include "game.h"
 #include "menu.h"
+#include "panel.h"
 
 class GameApp : public QGraphicsView
 {
@@ -17,13 +18,16 @@ class GameApp : public QGraphicsView
 
     Game *game;
     Menu *menu;
+    ResultScreen *screen;
 
 public:
     GameApp(int width, int height, QWidget *parent = 0);
     ~GameApp();
 
+    void ShowResultScreen();
+
 public slots:
-    void playClassic();
+    void Play();
     void ShowMenu();
 
     void EndGame(int score);

@@ -6,6 +6,8 @@
 GameField::GameField(int w, int h) : width(w), height(h)
 {
 	figure = new Figure();
+    mode = classic;
+
     srand(time(0));
 
     score = 0;
@@ -101,6 +103,16 @@ void GameField::MoveDownFigure()
     AddFigure();
 }
 
+void GameField::ClearAll()
+{
+    for (int i = 0; i < height; i++)
+        for (int j = 0; j < width; j++){
+            gameFieldArray[i][j] = false;
+            if(i < 4 && j < 4)
+                figure->getFigure[i][j] = false;
+        }
+}
+
 void GameField::ClearPrevious()
 {
     int x = currentX,
@@ -117,9 +129,6 @@ void GameField::ClearPrevious()
         }
         y++;
     }
-//    for (int i = 0; i < height; i++)
-//        for (int j = 0; j < width; j++)
-//            gameFieldArray[i][j] = false;
 }
 
 bool GameField::CheckCollisionLeft()
@@ -589,9 +598,29 @@ bool GameField::CheckGameOver()
 	return false;
 }
 
-void GameField::CheckLine()
+bool GameField::CheckLine()
 {
     int count = 0;
+    bool flag = false;
+
+    if(mode == endless){
+        for(int j = 0; j < width; j++)
+        {
+            count = 0;
+            for(int i = 0; i < height; i++)
+            {
+                if(gameFieldArray[i][j])
+                    count++;
+                if(count == height)
+                {
+                    DeleteVerticalLine(j);
+                    score++;
+                    flag = true;
+                }
+            }
+        }
+    }
+    count = 0;
 
     for (int i = 0; i < height; i++)
 	{
@@ -604,9 +633,26 @@ void GameField::CheckLine()
             {
                 DeleteHorizontalLine(i);
                 score++;
+                flag = true;
             }
 		}
     }
+    return flag;
+}
+
+void GameField::Restart()
+{
+    score = 0;
+    ClearAll();
+    CreateFigure();
+}
+
+void GameField::SetMode(int in)
+{
+    if(in == 1)
+        mode = endless;
+    else
+        mode = classic;
 }
 
 void GameField::DeleteHorizontalLine(int index_line)
@@ -620,6 +666,16 @@ void GameField::DeleteHorizontalLine(int index_line)
 
     for (int j = 0; j < width; j++)
         gameFieldArray[0][j] = false;
+}
+
+void GameField::DeleteVerticalLine(int index_line)
+{
+    for (int i = 0; i < height; i++)
+        gameFieldArray[i][index_line] = false;
+
+    for (int j = index_line; j < width - 1; j++)
+    for (int i = 0; i < height; i++)
+        gameFieldArray[i][j] = gameFieldArray[i][j + 1];
 }
 
 int GameField::GetScore()

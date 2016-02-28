@@ -14,7 +14,31 @@
 class Game : public QObject
 {
     Q_OBJECT
+
+public:
+    enum Mode{classic,endless,online};
+
+    Button *butClose;
+    QGraphicsScene *scene;
+
+    Game();
+    ~Game();
+
+    bool eventFilter(QObject *, QEvent *);
+
+    void Restart();
+    void Stop();
+    void SetMode(Mode);
+
+public slots:
+    void Update();
+
+signals:
+    void EndGame(int);
+
 private:
+
+    QMediaPlayer *bkgSound, *fallSound;
 
     GameField *gameField;
     QGraphicsRectItem **field, **fieldNext;
@@ -23,21 +47,7 @@ private:
 
     QGraphicsRectItem *fieldBoard, *nextFigureBoard;
     QTimer *timer;
-
-public:
-    Button *butClose;
-    QGraphicsScene *scene;
-    Game();
-    ~Game();
-    bool eventFilter(QObject *, QEvent *);
-
-    void Restart();
-
-public slots:
-    void Update();
-
-signals:
-    void EndGame(int);
+    Mode mode;
 };
 
 #endif // GAME
